@@ -147,7 +147,9 @@ def add_new_post():
     user1 = request.form['user1']
     user2 = request.form['user2']
     text = request.form['text']
-    cursor.execute("INSERT INTO `massages` ( `sender`, `receiver`, `massage`) VALUES ( '{}' , '{}' , '{}' )".format( user1 , user2 , text ))
+    sql = "INSERT INTO `massages` ( `sender`, `receiver`, `massage`) VALUES (%s, %s, %s)"
+    val = ( user1 , user2 , text  )
+    cursor.execute(sql, val)
     return json.dumps ( "add new post done" )
 
 @socketio.on( 'connection event' )
