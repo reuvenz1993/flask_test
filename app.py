@@ -4,6 +4,7 @@ from MySQLdb import _mysql
 import json
 from twisted.web.server import Session
 from flask_socketio import SocketIO, emit , send
+from datetime import datetime
 
 
 myDB = MySQLdb.connect(host="db4free.net",port=3306,user="reuven",passwd="cba96e7c",db="reuven" , charset='utf8')
@@ -147,8 +148,11 @@ def add_new_post():
     user1 = str(request.form['user1'])
     user2 = str(request.form['user2'])
     text = str(request.form['text'])
-    sql2 = "INSERT INTO `massages` ( `sender`, `receiver`, `massage` , `time`) VALUES (%s, %s, %s, CURRENT_TIMESTAMP )"
-    val2 = ( user1 , user2 , text  )
+    sql2 = """INSERT INTO `massages` ( `sender`, `receiver`, `massage` , `time`) VALUES (%s, %s, %s )"""
+    now = datetime.now()
+    now = now.strftime('%Y-%m-%d %H:%M:%S')
+    print (now)
+    val2 = ( user1 , user2 , text )
     print (val2)
     cursor.execute(sql2, val2)
     print ( 'insert done')
