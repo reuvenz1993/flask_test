@@ -144,12 +144,14 @@ def open_chat():
 def add_new_post():
     user1 = session['username']
     print (user1)
-    user1 = request.form['user1']
-    user2 = request.form['user2']
-    text = request.form['text']
+    user1 = str(request.form['user1'])
+    user2 = str(request.form['user2'])
+    text = str(request.form['text'])
     sql = "INSERT INTO `massages` ( `sender`, `receiver`, `massage`) VALUES (%s, %s, %s)"
     val = ( user1 , user2 , text  )
+    print (val)
     cursor.execute(sql, val)
+    print ( 'insert done')
     return json.dumps ( "add new post done" )
 
 @socketio.on( 'connection event' )
