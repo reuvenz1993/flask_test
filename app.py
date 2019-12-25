@@ -3,7 +3,6 @@ import MySQLdb
 from MySQLdb import _mysql
 import json
 from twisted.web.server import Session
-from sqlalchemy.dialects.mysql import mysqlconnector
 from flask_socketio import SocketIO, emit , send
 
 
