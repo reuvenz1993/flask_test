@@ -147,10 +147,10 @@ def add_new_post():
     user1 = str(request.form['user1'])
     user2 = str(request.form['user2'])
     text = str(request.form['text'])
-    sql = "INSERT INTO `massages` ( `sender`, `receiver`, `massage`) VALUES (%s, %s, %s)"
-    val = ( user1 , user2 , text  )
-    print (val)
-    cursor.execute(sql, val)
+    sql2 = "INSERT INTO `massages` ( `sender`, `receiver`, `massage` , `time`) VALUES (%s, %s, %s, CURRENT_TIMESTAMP )"
+    val2 = ( user1 , user2 , text  )
+    print (val2)
+    cursor.execute(sql2, val2)
     print ( 'insert done')
     return json.dumps ( "add new post done" )
 
