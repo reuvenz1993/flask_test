@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/style.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/leftside_style.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/rightside_style.css')}}">
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
+
+<form id="myform" action="" method="POST" >
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="me" >
+    <label class="form-check-label" for="exampleRadios1">  Only me </label>
+</div>
+
+
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="all" checked>
+    <label class="form-check-label" for="exampleRadios2"> Everybody </label>
+ </div>
+</form>
+
+
+<div class="container">
+
+    <div class="row">
+
+        <div id="leftside" class="col-md-3">
+
+            <div class="inbox_people">
+                
+                <div class="headind_srch">
+
+                    <div class="recent_heading">
+                        <h4>Recent</h4>
+
+
+                    </div>
+
+                    <div class="srch_bar">
+
+                        <div class="stylish-input-group">
+                            <input type="text" class="search-bar"  placeholder="Search" >
+                            <span class="input-group-addon">
+                            <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                            </span> 
+                         </div>
+
+                    </div>
+                
+
+
+
+                </div>
+
+                <div id="inbox_chat" class="inbox_chat">
+
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+           
+
+
+
+        </div>
+
+        <div id="rightside" class="col-md-9" style="background: aliceblue;">
+            <div class="mesgs">
+                  <div id="msg_history" class="msg_history">
+               
+                  </div>
+            
+
+            </div>
+
+
+
+            <div class="row justify-content-md-center">
+        
+        <div class="col-md-9">
+    
+            <div id="add-post" >
+                
+    
+                    <form  id="write_new_msg" method="post">
+    
+                    <div class="form-group">
+                    <label class= for="">write a new massage</label>
+                    <textarea id="the_added_msg" class="form-control" name="newtext2" id="newtext2" rows="3"></textarea>
+                    </div>
+    
+                    <input id="rec" type="hidden" name="rec" value="reuven">
+    
+                    <button id="submit-new-post" name="submit-new-post" type="submit" class="btn btn-primary">Submit</button>
+    
+                    </form>
+                </div>
+    
+            </div>
+    
+        </div> 
+            
+        </div>
+
+
+
+
+
+
+    </div>
+        
+
+
+</div>
+
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript">
+
+    var arr = [];
+
+    var user2 = "reuven";
+    var userlist_Array = [] ;
+    var user1 =  username ;
+
+$(document).ready(function () {
+    username = document.querySelector("#username").innerHTML
+    //console.log("this is on main code console log :");
+    $.post('/userlist',
+    {user1: user1},
+    function( data , status)
+    {
+    console.log("ajax scss :");
+    userlist_Array=$.parseJSON(data);
+    //console.log(data) ;
+    update_user_show(userlist_Array["userlist"]);
+    }  );
+
+});
+
+
+function update_user_show (userlist_Array)
+    {
+        for (i = 0; i <  userlist_Array.length; i++) 
+            {
+                
+                var friend_username = userlist_Array[i][0];
+                
+
+                var user_tab = document.createElement('div');
+                var user_teb_header = document.createElement('div');
+                var user_teb_header_display = document.createElement('div');
+                var user_tab_msg_display = document.createElement('div');
+
+                user_tab.id = friend_username + "_user_tab";
+                user_tab.className ="chat_list active_chat hand pointer"
+
+                user_teb_header.id = friend_username + " user_teb_header-id";
+                user_teb_header.className = "chat_people hand pointer";
+                user_teb_header.innerHTML = "<p id =date_"+friend_username+"></p>";
+                if (userlist_Array[i][3] != 0 )
+                {
+                    user_teb_header.innerHTML = userlist_Array[i][3];
+                };
+
+                user_teb_header_display.className = "chat_ib name hand pointer"
+                user_teb_header_display.innerHTML = friend_username;
+                user_teb_header_display.id = i + "chat_ib name ";
+
+                user_tab_msg_display.className = "chat_ib lastmsg hand pointer";
+                user_tab_msg_display.innerHTML = "";
+                if (userlist_Array[i][2] != 0 )
+                {
+                    user_tab_msg_display.innerHTML = userlist_Array[i][2];
+                };
+                user_tab_msg_display.id = friend_username + "_chat_ib_lastmsg";
+
+                user_teb_header_display.addEventListener("click", function(event)
+                {
+                start_chat_with_user( event ) ;
+                });
+
+
+                user_teb_header.appendChild(user_teb_header_display);
+                user_teb_header.appendChild(user_tab_msg_display);
+                user_tab.appendChild(user_teb_header);
+
+                $("#inbox_chat").append(user_tab);
+
+                //setTimeout( get_last_message(friend_username) , 1000 );
+
+
+                
+
+
+
+            }  ;
+
+
+    };
+
+
+    function start_chat_with_user(userid)
+    {
+    //console.log(userid.target.innerHTM);
+    user2 = userid.target.innerHTML;
+    //console.log(user2);
+    var ff = "g";
+    $('#rec').val(user2);
+    user1 = document.querySelector("#username").innerHTML
+    load_messages( user1 ,user2 );
+    };
+
+
+    function load_messages( user1 , user2)
+    {
+        data = user2
+        console.log("log message activted")
+        $.ajax({
+            type: "POST",
+            url: '/open_chat',
+            data: { 'data' : data }, 
+            success: function (response) {
+                console.log(response)
+                message_Array=$.parseJSON(response);
+                show_messages ( message_Array , user1 , user2)
+            }
+            }) ;
+
+
+
+    }
+
+
+    function show_messages(messages_array , user1 ,user2 )
+{
+    //console.log(messages_array);
+    $("#msg_history").empty();
+    user1 = username;
+
+    for (i = 0; i <  messages_array.length; i++) 
+    {
+        if (messages_array[i][1] == user1)
+        {
+         var out_message_header = document.createElement('div');
+         var out_message_text_box = document.createElement('div');
+         var out_message_text_contant = document.createElement('div');
+         var out_message_text_date = document.createElement('div');
+        
+         out_message_header.className = "outgoing_msg";
+         out_message_text_box.className = "sent_msg";
+         out_message_text_contant.className = "out_text_contant";
+         out_message_text_date.className = "out_text_date";
+
+         out_message_text_contant.innerHTML = messages_array [i][3];
+         out_message_text_date.innerHTML = messages_array [i][4].substring(0,16);
+
+         out_message_text_box.appendChild(out_message_text_contant);
+         out_message_text_box.appendChild(out_message_text_date);
+
+         out_message_header.appendChild(out_message_text_box);
+
+         $("#msg_history").append(out_message_header);
+
+        } else if (messages_array[i][1] == user2 )
+        {
+
+         var in_message_inline_block = document.createElement('div');
+         var in_message_header = document.createElement('div');
+         var in_message_text_box = document.createElement('div');
+         var in_message_text_contant = document.createElement('div');
+         var in_message_text_date = document.createElement('div');
+         
+         in_message_inline_block.className = "in_msg_block";
+         in_message_header.className = "in_msg";
+         in_message_text_box.className = "in_msg_box";
+         in_message_text_contant.className = "in_text_contant";
+         in_message_text_date.className = "in_text_date";
+
+         in_message_text_contant.innerHTML = messages_array [i][3] ;
+         in_message_text_date.innerHTML = messages_array [i][4].substring(0,16) ;
+
+        
+         in_message_text_box.appendChild(in_message_text_contant);
+         in_message_text_box.appendChild(in_message_text_date);
+
+         in_message_header.appendChild(in_message_text_box);
+         in_message_inline_block.appendChild(in_message_header);
+
+         $("#msg_history").append(in_message_inline_block);
+
+
+        }
+
+
+    }
+
+    $(function() {
+        var wtf    = $('#msg_history');
+        var height = wtf[0].scrollHeight;
+        wtf.scrollTop(height);
+      });
+};
+
+
+$("#write_new_msg").submit(function(e) 
+{
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    var text = the_added_msg.value ;
+    var user1 =  username ;
+    var user2 = $('#rec').val();
+    var data = [];
+    data['text'] = text;
+    data['user1'] = user1;
+    data['user2'] = user2;
+    console.log(data);
+
+
+    $.ajax({
+        type: "POST",
+        url: '/add_new_post',
+        data: { user1 : user1 , user2 : user2 , text : text }, 
+        success: function (response) {
+            console.log(response)
+            $("#the_added_msg").val("");
+            load_messages(user1 ,user2 );
+        }
+        }) ;
+});
+
+
+
+</script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io();
+    socket.on('connect', function() {
+        socket.emit('my event', {data: 'I\'m connected!'});
+    });
+</script>
+
+{% endblock %}
